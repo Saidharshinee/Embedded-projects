@@ -1,1 +1,6 @@
-
+Design an Embedded System to perform following tasks 
+o Interface ATmega328P with TMP36 Temperature Sensor  
+o Read the sensor using inbuilt ADC every one second 
+o Print the data on LCD  
+o Use Embedded C for programming (Do Not use Arduino Programming 
+Language) 
