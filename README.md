@@ -8,6 +8,7 @@ Language)
 #### OUTPUT
 
 ![Screenshot (408)](https://github.com/user-attachments/assets/56f85b3c-c9fe-40d2-9b29-3be5838c154a)
+```
 
 #include <avr/io.h>
 #include <util/delay.h>
