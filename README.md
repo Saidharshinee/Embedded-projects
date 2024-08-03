@@ -5,8 +5,9 @@
 ### o Use Embedded C for programming (Do Not use Arduino Programming 
 Language)
 ![Screenshot (407)](https://github.com/user-attachments/assets/6637842b-97d2-46f8-b9a2-17befb472394)
-```
+#### OUTPUT
 
+![Screenshot (408)](https://github.com/user-attachments/assets/56f85b3c-c9fe-40d2-9b29-3be5838c154a)
 
 #include <avr/io.h>
 #include <util/delay.h>
