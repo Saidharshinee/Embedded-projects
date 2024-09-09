@@ -143,21 +143,26 @@ void float_to_string(float value, char *buffer) {
 ```
 
 
-####2.  Design an Embedded System to perform following tasks 
+#### 2.  Design an Embedded System to perform following tasks 
 ### Interface ATmega328P with DC Motor and a Potentiometer 
 #### o Read Potentiometer using ADC 
 #### o Generate PWM with duty cycle proportional to Potentiometer voltage  
 #### o Control the speed of motor using PWM 
 #### o Change the direction of motor using a button (use interrupt)
-![Screenshot (537)](https://github.com/user-attachments/assets/f6aab15d-e2b4-47ae-9809-eca1d42cd907)
+![Screenshot (539)](https://github.com/user-attachments/assets/3d744175-0649-4ccb-b749-aa0a17c1b3d2)
+
 #### OUTPUT
+
 ##### Potentiometer at minimum position: The motor will run at the slowest speed or may stop entirely.
 ##### Potentiometer at maximum position: The motor will run at maximum speed.
 ##### Pressing the button: Each press will toggle the direction of the motor (forward/reverse).
 
 
+![Screenshot (540)](https://github.com/user-attachments/assets/857cf7bf-b431-42d5-8daa-293ee4ab489d)
+### Source code
 
-![Screenshot (538)](https://github.com/user-attachments/assets/94c891fb-4ab4-431e-b657-ece6404b89bc)
+
+
 ```
 #include <avr/io.h>
 #include <avr/interrupt.h>
