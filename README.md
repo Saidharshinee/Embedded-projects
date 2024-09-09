@@ -141,3 +141,90 @@ void float_to_string(float value, char *buffer) {
     sprintf(buffer, "%.2f", value);
 }
 ```
+
+
+####2.  Design an Embedded System to perform following tasks 
+### Interface ATmega328P with DC Motor and a Potentiometer 
+#### o Read Potentiometer using ADC 
+#### o Generate PWM with duty cycle proportional to Potentiometer voltage  
+#### o Control the speed of motor using PWM 
+#### o Change the direction of motor using a button (use interrupt)
+![Screenshot (537)](https://github.com/user-attachments/assets/f6aab15d-e2b4-47ae-9809-eca1d42cd907)
+#### OUTPUT
+##### Potentiometer at minimum position: The motor will run at the slowest speed or may stop entirely.
+##### Potentiometer at maximum position: The motor will run at maximum speed.
+##### Pressing the button: Each press will toggle the direction of the motor (forward/reverse).
+
+
+
+![Screenshot (538)](https://github.com/user-attachments/assets/94c891fb-4ab4-431e-b657-ece6404b89bc)
+```
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+volatile uint8_t motorDirection = 0;  // 0 for forward, 1 for reverse
+
+void ADC_init(void) {
+    // Set reference voltage to AVcc and select ADC0 (PC0)
+    ADMUX = (1 << REFS0); 
+    ADCSRA = (1 << ADEN) | (1 << ADPS2) | (1 << ADPS1);  // Enable ADC, Prescaler = 64
+}
+
+uint16_t ADC_read(void) {
+    ADCSRA |= (1 << ADSC);  // Start conversion
+    while (ADCSRA & (1 << ADSC));  // Wait for conversion to complete
+    return ADC;
+}
+
+void PWM_init(void) {
+    // Set fast PWM mode, non-inverting, prescaler 64
+    TCCR1A = (1 << WGM10) | (1 << COM1A1);
+    TCCR1B = (1 << WGM12) | (1 << CS11) | (1 << CS10);
+    DDRD |= (1 << PD6);  // Set PD6 (OC1A) as output
+}
+
+void set_PWM(uint8_t dutyCycle) {
+    OCR1A = dutyCycle;  // Set the duty cycle
+}
+
+void MotorDirection_init(void) {
+    DDRB |= (1 << PB0);  // Set PB0 as output for motor direction control
+    PORTB &= ~(1 << PB0);  // Initially set motor to forward
+}
+
+void Button_init(void) {
+    DDRD &= ~(1 << PD2);  // Set PD2 as input (INT0 pin)
+    PORTD |= (1 << PD2);  // Enable pull-up resistor on PD2
+    EICRA |= (1 << ISC01);  // Trigger INT0 on falling edge
+    EIMSK |= (1 << INT0);   // Enable external interrupt INT0
+}
+
+ISR(INT0_vect) {
+    motorDirection = !motorDirection;  // Toggle motor direction
+    if (motorDirection) {
+        PORTB |= (1 << PB0);  // Set motor to reverse
+    } else {
+        PORTB &= ~(1 << PB0);  // Set motor to forward
+    }
+}
+
+int main(void) {
+    ADC_init();
+    PWM_init();
+    MotorDirection_init();
+    Button_init();
+    
+    sei();  // Enable global interrupts
+
+    uint16_t adcValue;
+    uint8_t pwmValue;
+
+    while (1) {
+        adcValue = ADC_read();  // Read potentiometer value
+        pwmValue = adcValue / 4;  // Map 10-bit ADC value to 8-bit PWM value
+        set_PWM(pwmValue);  // Set PWM to control motor speed
+    }
+
+    return 0;
+}
+```
